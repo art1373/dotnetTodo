@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Data;
@@ -11,6 +13,7 @@ using TodoApp.Models;
 
 namespace TodoApp.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class TodosController : ControllerBase
@@ -41,7 +44,7 @@ namespace TodoApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateItem(Todo data)
+        public async Task<IActionResult> CreateItem([FromBody] Todo data)
         {
             if (ModelState.IsValid)
             {
@@ -55,7 +58,7 @@ namespace TodoApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateItem(int id, Todo item)
+        public async Task<IActionResult> UpdateItem(int id,[FromBody] Todo item)
         {
             if (id != item.Id)
                 return BadRequest();
